@@ -5,13 +5,17 @@ import urllib.request
 import re
 import sys
 
+# Check if argument is present
 if len(sys.argv) > 1 :
-
-    checkemail = re.compile(r"^(http|https|ftp|file)+://")
+    
+    # Set regex and recover argument
+    checkurl = re.compile(r"^(http|https|ftp|file)+://")
     url = str(sys.argv[1])
 
-    if checkemail.match(url) is None :
+    # Check if url is valid
+    if checkurl.match(url) is None :
         print("Unknown URL format")
+    # If yes test if url exist
     else :
 	try :
 	    urllib.request.urlopen(url).getcode()
