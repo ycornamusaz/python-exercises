@@ -17,7 +17,8 @@ RED      = ( 255,   0,   0)
 
 SOL = 0
 JUMP = 0
-C = 0
+C = -100
+
 
 ## Define loop status
 done = False
@@ -68,6 +69,28 @@ class Ground(pygame.sprite.Sprite):
         self.rect.y = HAUTEUR - 16 - 94
         self.rect.x = 32
 
+class Buton(pygame.sprite.Sprite):
+    """ This class represents the block. """
+    def __init__(self, text):
+        # Call the parent class (Sprite) constructor
+        super().__init__()
+        # 380 x 94
+        self.image = pygame.image.load("PNG/Environment/ground_grass.png").convert()
+        self.image.set_colorkey(BLACK)
+        self.text = text
+        self.text_1 = FONT.render(self.text)
+        screen.blit(self.text_1, [self.rect.x, self.rect.y])
+
+        self.rect = self.image.get_rect()
+
+        self.width = 380
+        self.height = 94
+        self.jump = 0
+        self.speed = 0
+        self.rect.x = (LARGEUR/2 - self.width/2)
+        self.rect.y = 32
+
+
 ########## INIT ZONE ##########
 
 ## Init pygame
@@ -81,6 +104,8 @@ pygame.display.set_caption("My first window !!")
 
 ## Init clock
 clock = pygame.time.Clock()
+
+font = pygame.font.SysFont('Ubuntu', 25, True, False)
 
 sol_list = pygame.sprite.Group()
 all_sprites_list = pygame.sprite.Group()
@@ -136,13 +161,18 @@ while not done :
         pygame.quit()
 
     if (JUMP == 1) :
-        if (C < 34) :
-            player.rect.y = player.rect.y - C
-            C += 3
-        else : 
+        if (C < 100) :
+            player.rect.y = (test - (-(C/10)**2+100))
+            print("Equart : " + str(-(C/10)**2+100))
+            print("Y : " + str(player.rect.y))
+            print(player.rect.y - (-(C/10)**2+100))
+            C += 1
+        else :
             JUMP = 0
-            C = 0
+            C = -100
             SOL = 0
+    else : 
+        test = player.rect.y
     
     player.rect.y += 3
 
@@ -153,6 +183,8 @@ while not done :
     for sol in terre_player_list :
         if (player.rect.y + player.height) <= (sol.rect.y + 3) :
             SOL = 1
+            JUMP = 0
+            #C = -100
             player.rect.y -= 3
         elif (player.rect.x + player.width) >= (sol.rect.x) and (player.rect.x + player.width) <= (sol.rect.x + sol.width) :
             player.rect.x -= 5
@@ -181,9 +213,8 @@ while not done :
     clock.tick(60)
 
 
-
-
-
+    
+    
 
 
 
