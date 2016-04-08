@@ -16,6 +16,7 @@ import random
 # Define some colors
 BLACK = (  0,   0,   0)
 WHITE = (255, 255, 255)
+BLUE  = (  0,   0, 255)
 RED   = (255,   0,   0)
  
 class Block(pygame.sprite.Sprite):
@@ -108,6 +109,9 @@ while not done:
     for block in blocks_hit_list:
         score += 1
         print(score)
+        print(block_list)
+        all_sprites_list.add(block)
+        block.image.fill(BLUE)
  
     # Draw all the spites
     all_sprites_list.draw(screen)
@@ -116,6 +120,6 @@ while not done:
     pygame.display.flip()
  
     # Limit to 60 frames per second
-    clock.tick(60)
+    clock.tick(300)
  
 pygame.quit()
