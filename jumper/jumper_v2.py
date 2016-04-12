@@ -15,3 +15,24 @@ def color(self):
     self.GREEN    = (   0, 255,   0)
     self.RED      = ( 255,   0,   0)
 
+class Player(pygame.sprite.Sprite):
+
+    def __init__(self, skin):
+        # Call the parent class (Sprite) constructor
+        super().__init__()
+
+        if skin == "male" :
+            self.image = pygame.image.load("PNG/Players/bunny1_ready.png").convert()
+            self.image.set_colorkey(color.BLACK)
+        elif skin == "femal" :
+            self.image = pygame.image.load("PNG/Players/bunny2_ready.png").convert()
+            self.image.set_colorkey(color.BLACK)
+
+        self.rect = self.image.get_rect()
+
+        self.width = 120
+        self.height = 191
+        self.jump = 0
+        self.speed = 0
+        self.rect.y = var.HEIGHT - 32 - 94 - self.height
+        self.rect.x = 32
