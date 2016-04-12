@@ -80,3 +80,13 @@ class Buton(pygame.sprite.Sprite):
         self.text_height = self.textSurf.get_height()
         self.image.blit(self.textSurf, ((self.width/2 - self.text_width/2), (self.height/2 - self.text_height/2)))
 
+class Pointer(pygame.sprite.Sprite):
+
+    def __init__(self):
+        self.image = pygame.Surface((1, 1))
+        self.image.fill(color.WHITE)
+        self.rect = self.image.get_rect()
+        self.rect.x = 1
+        self.rect.y = 1
+
+
