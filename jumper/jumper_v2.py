@@ -36,3 +36,22 @@ class Player(pygame.sprite.Sprite):
         self.speed = 0
         self.rect.y = var.HEIGHT - 32 - 94 - self.height
         self.rect.x = 32
+
+class Ground(pygame.sprite.Sprite):
+    
+    def __init__(self):
+        # Call the parent class (Sprite) constructor
+        super().__init__()
+
+        self.image = pygame.image.load("PNG/Environment/ground_grass.png").convert()
+        self.image.set_colorkey(color.BLACK)
+
+        self.rect = self.image.get_rect()
+
+        self.width = 380
+        self.height = 94
+        self.jump = 0
+        self.speed = 0
+        self.rect.y = var.HEIGHT - 16 - 94
+        self.rect.x = 32
+
