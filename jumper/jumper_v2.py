@@ -38,6 +38,7 @@ class Player(pygame.sprite.Sprite):
         self.height = self.image.get_height()
         self.height_diff = 0
         self.jump = 0
+        self.speed_base = 5
         self.speed = 0
         self.run_time = 0
         self.rect.y = var.height - 32 - 94 - self.height
@@ -145,6 +146,31 @@ class Pointer(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = 1
         self.rect.y = 1
+
+class Background() :
+    def __init__(self) :
+        var = Var()
+        color = Color()
+
+        self.bg1_base = pygame.image.load("PNG/Background/bg_layer1.png")#.convert()
+        self.bg2_base = pygame.image.load("PNG/Background/bg_layer2.png")#.convert()
+        self.bg3_base = pygame.image.load("PNG/Background/bg_layer3.png")#.convert()
+        self.bg4_base = pygame.image.load("PNG/Background/bg_layer4.png")#.convert()
+
+        self.bg = pygame.Surface([var.width, var.height])
+
+        self.bg1 = pygame.transform.scale(self.bg1_base, (var.width, var.height))
+        self.bg2 = pygame.transform.scale(self.bg2_base, (var.width, var.height))
+        self.bg3 = pygame.transform.scale(self.bg3_base, (var.width, var.height))
+        self.bg4 = pygame.transform.scale(self.bg4_base, (var.width, var.height))
+        
+        self.bg.blit(self.bg1, [0, 0])
+        self.bg.blit(self.bg2, [0, 0])
+        self.bg.blit(self.bg3, [0, 0])
+        self.bg.blit(self.bg4, [0, 0])
+
+    def update(self, screen) :
+        screen.blit(self.bg, [0, 0])
 
 class Game :
     def menu():
@@ -257,6 +283,7 @@ class Game :
         
         screen = pygame.display.set_mode([var.width, var.height])
         clock = pygame.time.Clock()
+        background = Background()
 
         done_game = False
     
@@ -295,10 +322,10 @@ class Game :
                     done_game = True
                 elif event.type == pygame.KEYDOWN :
                     if event.key == pygame.K_RIGHT :
-                        player.speed = 5
+                        player.speed = player.speed_base
                         direction = "right"
                     elif event.key == pygame.K_LEFT :
-                        player.speed = -5
+                        player.speed = -(player.speed_base)
                         direction = "left"
                     elif event.key == pygame.K_UP :
                         if GROUND == 1 :
@@ -339,12 +366,17 @@ class Game :
                         player.rect.y = ground.rect.y - player.height
                         last_ground = ground
                     elif (player.rect.x + player.width) >= (ground.rect.x) and (player.rect.x + player.width) <= (ground.rect.x + ground.width) :
-                        player.rect.x -= 5
-                    elif (player.rect.x) <= (ground.rect.x + ground.width) and (player.rect.x) >= (ground.rect.x) :
-                        player.rect.x += 5
+                        player.rect.x -= player.speed_base
+                        player.rect.y += 3
+                    elif (player.rect.x) < (ground.rect.x + ground.width) and (player.rect.x) > (ground.rect.x) :
+                        player.rect.x = (ground.rect.x + ground.width)
+                        player.rect.y += 3
+                    elif (player.rect.y) <= (groung.rect.y + ground.height + 1) and player.rect.y > (ground.rect.y + ground.height - 10) :
+                        player.rect.y = (ground.rect.y + ground.height)
+                        player.rect.y += 3
                     ground_list.add(ground)
                     all_game_sprites_list.add(ground)
-            elif (player.rect.x + player.width) < (last_ground.rect.x) or (player.rect.x) > (last_ground.rect.x + last_ground.width) : 
+            elif (player.rect.x + player.width) <= (last_ground.rect.x) or (player.rect.x) >= (last_ground.rect.x + last_ground.width) : 
                 GROUND = 0
                 player.rect.y += 3
 
@@ -353,8 +385,8 @@ class Game :
             ########## CLEAR SCREEN ZONE ##########
         
             ## Set the entier screnn to white
-            screen.fill(color.BLACK)
-        
+            #screen.fill(color.BLACK)
+            background.update(screen)
         
             ########## DRAWING CODE ZONE ##########
             
