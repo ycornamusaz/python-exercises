@@ -1,11 +1,12 @@
 #!/usr/bin/python3.4
 
 import pygame
+import json
 
 class Var():
     def __init__(self):
         ## Define screen size
-        self.width = 1300
+        self.width = 1200
         self.height = 1000
 
 class Color():
@@ -51,6 +52,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = 32
 
     def update(self, run) :
+        ## Import diferents classes
         color = Color()
     
         ## Player animation
@@ -91,6 +93,7 @@ class Ground(pygame.sprite.Sprite):
     def __init__(self):
         ## Call the parent class (Sprite) constructor
         super().__init__()
+        ## Import diferents classes
         color = Color()
         var = Var()
 
@@ -112,6 +115,7 @@ class Buton(pygame.sprite.Sprite):
     def __init__(self, text, color_txt):
         ## Call the parent class (Sprite) constructor
         super().__init__()
+        ## Import diferents classes
         color = Color()
         var = Var()
 
@@ -141,10 +145,13 @@ class Buton(pygame.sprite.Sprite):
         self.text_height = self.textSurf.get_height()
         ## Fuse text object with the buton
         self.image.blit(self.textSurf, ((self.width/2 - self.text_width/2), (self.height/2 - self.text_height/2)))
-    def update(self, color_txt):
+    def update(self, text, color_txt):
+        ## Import diferents classes
         color = Color()
         var = Var()
 
+        ## Update text
+        self.text = text
         ## Update text color
         self.color = color_txt
         ## Set font and font size
@@ -161,6 +168,7 @@ class Pointer(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
+        ## Import diferents classes
         color = Color()
         var = Var()
 
@@ -176,6 +184,7 @@ class Pointer(pygame.sprite.Sprite):
 
 class Background() :
     def __init__(self) :
+        ## Import diferents classes
         var = Var()
         color = Color()
 
@@ -208,7 +217,7 @@ class Game :
     def menu():
         ## Init pygame
         pygame.init()
-        
+        ## Import diferents classes
         var = Var()
         color = Color()
         ## Init screen
@@ -284,7 +293,7 @@ class Game :
                 ## For each buton who are in colision with pointer
                 for buton in buton_pointer_list :
                     ## Update text color to red
-                    buton.update(color.RED)
+                    buton.update(buton.text , color.RED)
                     ## Re-add buton to sprite list
                     buton_list.add(buton)
                     all_menu_sprites_list.add(buton)
@@ -293,7 +302,7 @@ class Game :
                 ## For all butons 
                 for buton in buton_list :
                     ## Update text color to white
-                    buton.update(color.WHITE)
+                    buton.update(buton.text, color.WHITE)
             
             ## If game have to start
             if game_start == True :
@@ -305,12 +314,12 @@ class Game :
             ########## CLEAR SCREEN ZONE ##########
         
             ## Set the entier screnn to white
-            screen.fill(color.BLACK)
-        
+            #screen.fill(color.BLACK)
+            background.update(screen)
         
             ########## DRAWING CODE ZONE ##########
             
-            background.update(screen)
+            ## Draw all sprites to the screen
             all_menu_sprites_list.draw(screen)
         
             ########## REFRESH SCREEN ZONE ##########
@@ -327,7 +336,7 @@ class Game :
         C_base = -109
         C = C_base
         GROUND = 0
-
+        ## Import diferents classes
         var = Var()
         color = Color()
         ## Init screen        
@@ -341,27 +350,52 @@ class Game :
         ## Create game sprite groups
         player_list = pygame.sprite.Group()
         ground_list = pygame.sprite.Group()
+        movable_list = pygame.sprite.Group()
         all_game_sprites_list = pygame.sprite.Group()
         ## Create player and set player direction
         player = Player("male")
         direction = "stand"
         ## Add player to gamesprite's group
+        movable_list.add(player)
+        ## Add player to movable group
         all_game_sprites_list.add(player)
+
+        json_data = open("map.json")
+        map_data = json.load(json_data)
+
+        i = 0
+        for blocks in map_data["Level_1"][0]["Block"] :
+            x = map_data["Level_1"][0]["Block"][i]["x"]
+            y = map_data["Level_1"][0]["Block"][i]["y"]
+            ground0 = Ground()
+            ground0.rect.x = x
+            ground0.rect.y = y
+            last_ground = ground0
+            all_game_sprites_list.add(ground0)
+            ground_list.add(ground0)
+            movable_list.add(ground0)
+            i += 1
+
         ## Create ground blocks
-        ground1 = Ground()
-        ground2 = Ground()
-        ## Init value
-        last_ground = ground2
-        ## Add ground blocks to game sprite's group
-        all_game_sprites_list.add(ground1)
-        all_game_sprites_list.add(ground2)
-        ## Add ground blocks to ground group 
-        ground_list.add(ground1)
-        ground_list.add(ground2)
-        ## Set ground2 block position
-        ground2.rect.x += 600
-        ground2.rect.y -= 100
-    
+        #ground1 = Ground()
+        #ground2 = Ground()
+        ### Init value
+        #last_ground = ground2
+        ### Add ground blocks to game sprite's group
+        #all_game_sprites_list.add(ground1)
+        #all_game_sprites_list.add(ground2)
+        ### Add ground blocks to ground group 
+        #ground_list.add(ground1)
+        #ground_list.add(ground2)
+        ### Add ground blocks to movable group
+        #movable_list.add(ground1)
+        #movable_list.add(ground2)
+        ### Set ground2 block position
+        #ground2.rect.x += 400
+        #ground2.rect.y -= 100
+        #print(ground2.rect.x)
+        #print(" " + str(ground2.rect.y))
+
         ## Start game loop
         while not done_game :
                 
@@ -408,6 +442,13 @@ class Game :
             ## Quit game if player is out of screen
             if player.rect.y > var.height :
                 done_game = True
+            
+            if (player.rect.x + player.width) > (var.width - var.width/3) :
+                for test in movable_list :
+                    test.rect.x -= 5
+            if player.rect.x < (var.width/16) :
+                for test in movable_list :
+                    test.rect.x += 5
 
             ## Jump process
             if (JUMP == 1) :
@@ -461,6 +502,7 @@ class Game :
                         ## Gravity
                         player.rect.y += 3
                     ## Re-add block to default group
+                    movable_list.add(ground)
                     ground_list.add(ground)
                     all_game_sprites_list.add(ground)
             ## If the player isn't on the block or down the block
