@@ -18,22 +18,52 @@ class Color():
         self.GREEN    = (   0, 255,   0)
         self.RED      = ( 255,   0,   0)
 
+color = Color()
+
 class Player(pygame.sprite.Sprite):
 
     def __init__(self, skin):
         ## Call the parent class (Sprite) constructor
         super().__init__()
         ## Import diferents classes
-        color = Color()
         var = Var()
 
         ## Skin choice
         if skin == "male" :
-            self.image = pygame.image.load("PNG/Players/bunny1_stand.png").convert()
-            self.image.set_colorkey(color.BLACK)
+            ## Import textures
+            self.bunny_stand = pygame.image.load("PNG/Players/bunny1_stand.png").convert()
+            self.bunny_walk1_r = pygame.image.load("PNG/Players/bunny1_walk1_r.png").convert()
+            self.bunny_walk2_r = pygame.image.load("PNG/Players/bunny1_walk2_r.png").convert()
+            self.bunny_walk1_l = pygame.image.load("PNG/Players/bunny1_walk1_l.png").convert()
+            self.bunny_walk2_l = pygame.image.load("PNG/Players/bunny1_walk2_l.png").convert()
+
+            ## Set texture background to transparent
+            self.bunny_stand.set_colorkey(color.BLACK)
+            self.bunny_walk1_r.set_colorkey(color.BLACK)
+            self.bunny_walk2_r.set_colorkey(color.BLACK)
+            self.bunny_walk1_l.set_colorkey(color.BLACK)
+            self.bunny_walk2_l.set_colorkey(color.BLACK)
+
+            ## Set texture
+            self.image = self.bunny_stand
+
         elif skin == "femal" :
-            self.image = pygame.image.load("PNG/Players/bunny2_ready.png").convert()
-            self.image.set_colorkey(color.BLACK)
+            ## Import textures
+            self.bunny_stand = pygame.image.load("PNG/Players/bunny2_stand.png").convert()
+            self.bunny_walk1_r = pygame.image.load("PNG/Players/bunny2_walk1_r.png").convert()
+            self.bunny_walk2_r = pygame.image.load("PNG/Players/bunny2_walk2_r.png").convert()
+            self.bunny_walk1_l = pygame.image.load("PNG/Players/bunny2_walk1_l.png").convert()
+            self.bunny_walk2_l = pygame.image.load("PNG/Players/bunny2_walk2_l.png").convert()
+
+            ## Set texture background to transparent
+            self.bunny_stand.set_colorkey(color.BLACK)
+            self.bunny_walk1_r.set_colorkey(color.BLACK)
+            self.bunny_walk2_r.set_colorkey(color.BLACK)
+            self.bunny_walk1_l.set_colorkey(color.BLACK)
+            self.bunny_walk2_l.set_colorkey(color.BLACK)
+
+            ## Set texture
+            self.image = self.bunny_stand
         
         ## Get sprite position
         self.rect = self.image.get_rect()
@@ -53,30 +83,29 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, run) :
         ## Import diferents classes
-        color = Color()
     
         ## Player animation
         if run == "right" :
             ## Each images alternate every 20 frames
             if self.run_time < 20: 
-                self.image = pygame.image.load("PNG/Players/bunny1_walk1_r.png").convert()
+                self.image = self.bunny_walk1_r
                 self.run_time += 1
             elif self.run_time < 40 :
                 self.run_time += 1
-                self.image = pygame.image.load("PNG/Players/bunny1_walk2_r.png").convert()
+                self.image = self.bunny_walk2_r
             else :
                 self.run_time = 0
         elif run == "stand" :
-            self.image = pygame.image.load("PNG/Players/bunny1_stand.png").convert()
+            self.image = self.bunny_stand
             self.run_time = 0
         elif run == "left" :
             ## Each images alternate every 20 frames
             if self.run_time < 20: 
-                self.image = pygame.image.load("PNG/Players/bunny1_walk1_l.png").convert()
+                self.image = self.bunny_walk1_l
                 self.run_time += 1
             elif self.run_time < 40 :
                 self.run_time += 1
-                self.image = pygame.image.load("PNG/Players/bunny1_walk2_l.png").convert()
+                self.image = self.bunny_walk2_l
             else :
                 self.run_time = 0
         
@@ -94,7 +123,6 @@ class Ground(pygame.sprite.Sprite):
         ## Call the parent class (Sprite) constructor
         super().__init__()
         ## Import diferents classes
-        color = Color()
         var = Var()
 
         ## Import picture
@@ -116,23 +144,24 @@ class Buton(pygame.sprite.Sprite):
         ## Call the parent class (Sprite) constructor
         super().__init__()
         ## Import diferents classes
-        color = Color()
         var = Var()
 
         ## Import picrure
-        self.image = pygame.image.load("PNG/Environment/ground_grass.png").convert()
-        self.image_1 = pygame.image.load("PNG/Environment/ground_grass.png").convert_alpha()
+        self.image_1 = pygame.image.load("PNG/Environment/ground_grass.png").convert()
+
+        self.image = pygame.Surface([self.image_1.get_width(),self.image_1.get_height()])
+
         ## Set the background to transparent
         self.image.set_colorkey(color.BLACK)
 
         ## Get sprite position
         self.rect = self.image.get_rect()
+        
         ## Get sprite width and height
         self.width = self.image.get_width()
         self.height = self.image.get_height()
         self.rect.x = (var.width/2 - self.width/2)
         self.rect.y = 32
-        self.mask = pygame.mask.from_surface(self.image_1)
 
         ## Set text content
         self.text = text
@@ -146,10 +175,10 @@ class Buton(pygame.sprite.Sprite):
         self.text_width = self.textSurf.get_width()
         self.text_height = self.textSurf.get_height()
         ## Fuse text object with the buton
-        self.image.blit(self.textSurf, ((self.width/2 - self.text_width/2), (self.height/2 - self.text_height/2)))
+        self.image.blit(self.image_1,[0,0])
+        self.image.blit(self.textSurf, [(self.width/2 - self.text_width/2), (self.height/2 - self.text_height/2)])
     def update(self, text, color_txt):
         ## Import diferents classes
-        color = Color()
         var = Var()
 
         ## Update text
@@ -164,14 +193,14 @@ class Buton(pygame.sprite.Sprite):
         self.text_width = self.textSurf.get_width()
         self.text_height = self.textSurf.get_height()
         ## Fuse text object with the buton
-        self.image.blit(self.textSurf, ((self.width/2 - self.text_width/2), (self.height/2 - self.text_height/2)))
+        self.image.blit(self.image_1, [0,0])
+        self.image.blit(self.textSurf, [(self.width/2 - self.text_width/2), (self.height/2 - self.text_height/2)])
 
 class Pointer(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
         ## Import diferents classes
-        color = Color()
         var = Var()
 
         ## Create a surface of 1x1 px
@@ -189,13 +218,12 @@ class Background() :
     def __init__(self) :
         ## Import diferents classes
         var = Var()
-        color = Color()
 
         ## Import background pictures (don't convert picture to pygame format to keep transarence)
-        self.bg1_base = pygame.image.load("PNG/Background/bg_layer1.png")#.convert()
-        self.bg2_base = pygame.image.load("PNG/Background/bg_layer2.png")#.convert()
-        self.bg3_base = pygame.image.load("PNG/Background/bg_layer3.png")#.convert()
-        self.bg4_base = pygame.image.load("PNG/Background/bg_layer4.png")#.convert()
+        self.bg1_base = pygame.image.load("PNG/Background/bg_layer1.png")
+        self.bg2_base = pygame.image.load("PNG/Background/bg_layer2.png")
+        self.bg3_base = pygame.image.load("PNG/Background/bg_layer3.png")
+        self.bg4_base = pygame.image.load("PNG/Background/bg_layer4.png")
 
         ## Creat background surface
         self.bg = pygame.Surface([var.width, var.height])
@@ -222,7 +250,6 @@ class Game :
         pygame.init()
         ## Import diferents classes
         var = Var()
-        color = Color()
         ## Init screen
         screen = pygame.display.set_mode([var.width, var.height])
         ## Init windows title
@@ -231,10 +258,6 @@ class Game :
         clock = pygame.time.Clock()
         ## Menu loop stat
         done_menu = False
-        ## Game start stat
-        game_start = False
-        ## Options start stat
-        options_start = False
         ## Set background
         background = Background()
         ## Create menu sprite group
@@ -279,9 +302,11 @@ class Game :
                         buton_pointer_list = pygame.sprite.spritecollide(pointer, buton_list, True)
                         for buton in buton_pointer_list :
                             if buton.text is "Play" :
-                                game_start = True
+                                #game_start = True
+                                Game.game()
                             elif buton.text is "Options" :
-                                option_start = True
+                                buton.text = "This is currently not implemented"
+                                buton.update("This is currently not implemented", color.WHITE)
 
                             all_menu_sprites_list.add(buton)
                             buton_list.add(buton)
@@ -300,10 +325,9 @@ class Game :
             if buton_pointer_list != [] :
                 ## For each buton who are in colision with pointer
                 for buton in buton_pointer_list :
-                    buton_pointer_list_1 = pygame.sprite.collide_mask(pointer, buton)
-                    print (buton_pointer_list_1)
                     ## Update text color to red
-                    buton.update(buton.text , color.RED)
+                    if buton.color != color.RED :
+                        buton.update(buton.text , color.RED)
                     ## Re-add buton to sprite list
                     buton_list.add(buton)
                     all_menu_sprites_list.add(buton)
@@ -312,19 +336,12 @@ class Game :
                 ## For all butons 
                 for buton in buton_list :
                     ## Update text color to white
-                    buton.update(buton.text, color.WHITE)
+                    if buton.color != color.WHITE :
+                        buton.update(buton.text, color.WHITE)
             
-            ## If game have to start
-            if game_start == True :
-                ## Start game
-                Game.game()
-                ## Reset game_start variable
-                game_start = False
-        
             ########## CLEAR SCREEN ZONE ##########
         
-            ## Set the entier screnn to white
-            #screen.fill(color.BLACK)
+            ## Set the background
             background.update(screen)
         
             ########## DRAWING CODE ZONE ##########
@@ -337,7 +354,7 @@ class Game :
             ## Refresh screen
             pygame.display.flip()
         
-            ## Set game tick (per second)
+            ## Set game ticks (per second)
             clock.tick(60)
     
     def game() :
@@ -348,7 +365,6 @@ class Game :
         GROUND = 0
         ## Import diferents classes
         var = Var()
-        color = Color()
         ## Init screen        
         screen = pygame.display.set_mode([var.width, var.height])
         ## Init clock
@@ -372,7 +388,8 @@ class Game :
 
         json_data = open("map.json")
         map_data = json.load(json_data)
-
+        
+        ## Generate map
         i = 0
         for blocks in map_data["Level_1"][0]["Block"] :
             x = map_data["Level_1"][0]["Block"][i]["x"]
@@ -385,26 +402,6 @@ class Game :
             ground_list.add(ground0)
             movable_list.add(ground0)
             i += 1
-
-        ## Create ground blocks
-        #ground1 = Ground()
-        #ground2 = Ground()
-        ### Init value
-        #last_ground = ground2
-        ### Add ground blocks to game sprite's group
-        #all_game_sprites_list.add(ground1)
-        #all_game_sprites_list.add(ground2)
-        ### Add ground blocks to ground group 
-        #ground_list.add(ground1)
-        #ground_list.add(ground2)
-        ### Add ground blocks to movable group
-        #movable_list.add(ground1)
-        #movable_list.add(ground2)
-        ### Set ground2 block position
-        #ground2.rect.x += 400
-        #ground2.rect.y -= 100
-        #print(ground2.rect.x)
-        #print(" " + str(ground2.rect.y))
 
         ## Start game loop
         while not done_game :
@@ -484,7 +481,7 @@ class Game :
                 for ground in ground_player_list :
                     ## If the player is enter into the block by the top
                     if (player.rect.y + player.height) <= (ground.rect.y + 3) :
-                        ## Set ground vlue to true
+                        ## Set ground value to true
                         GROUND = 1
                         ## Stop jump 
                         JUMP = 0
@@ -493,22 +490,28 @@ class Game :
                         ## Set player pos to the top of the block
                         player.rect.y = ground.rect.y - player.height
                         last_ground = ground
-                    ## If the player is enter into the block by the right side
-                    elif (player.rect.x + player.width) >= (ground.rect.x) and (player.rect.x + player.width) <= (ground.rect.x + ground.width) :
+                    ## If the player is enter into the block by the bottom
+                    elif (player.rect.y) <= (ground.rect.y + ground.height) and player.rect.y >= (ground.rect.y + ground.height - 20) :
                         ## Move the player out of the block
-                        player.rect.x -= player.speed_base
+                        player.rect.y = (ground.rect.y + ground.height + 5)
+                        ## Stop jump
+                        JUMP = 0
+                        ## Player is "not" on ground
+                        GROUND = 0
+                        ## Set block to the last block
+                        last_ground = ground
+                        ## Gravity
+                        player.rect.y += 3
+                    ## If the player is enter into the block by the right side
+                    elif (player.rect.x + player.width) >= (ground.rect.x) and (player.rect.x + player.width) <= (ground.rect.x + ground.width - 5) :
+                        ## Move the player out of the block
+                        player.rect.x = (ground.rect.x - player.width)
                         ## Gravity
                         player.rect.y += 3
                     ## If the player is enter into the block by the left side
-                    elif (player.rect.x) < (ground.rect.x + ground.width) and (player.rect.x) > (ground.rect.x) :
+                    elif (player.rect.x) < (ground.rect.x + ground.width) and (player.rect.x) > (ground.rect.x - 5) :
                         ## Move the player out of the block
                         player.rect.x = (ground.rect.x + ground.width)
-                        ## Gravity
-                        player.rect.y += 3
-                    ## If the player is enter into the block by the bottom
-                    elif (player.rect.y) <= (groung.rect.y + ground.height + 1) and player.rect.y > (ground.rect.y + ground.height + 10) :
-                        ## Move the player out of the block
-                        player.rect.y = (ground.rect.y + ground.height)
                         ## Gravity
                         player.rect.y += 3
                     ## Re-add block to default group
