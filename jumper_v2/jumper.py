@@ -2,256 +2,20 @@
 
 import pygame
 import json
-
-class Var():
-    def __init__(self):
-        ## Define screen size
-        self.width = 1200
-        self.height = 1000
-
-class Color():
-    def __init__(self):
-        ## Define some colors
-        self.BLACK    = (   0,   0,   0)
-        self.WHITE    = ( 255, 255, 255)
-        self.BLUE     = (   0,   0, 255)
-        self.GREEN    = (   0, 255,   0)
-        self.RED      = ( 255,   0,   0)
-
-color = Color()
-
-class Player(pygame.sprite.Sprite):
-
-    def __init__(self, skin):
-        ## Call the parent class (Sprite) constructor
-        super().__init__()
-        ## Import diferents classes
-        var = Var()
-
-        ## Skin choice
-        if skin == "male" :
-            ## Import textures
-            self.bunny_stand = pygame.image.load("PNG/Players/bunny1_stand.png").convert()
-            self.bunny_walk1_r = pygame.image.load("PNG/Players/bunny1_walk1_r.png").convert()
-            self.bunny_walk2_r = pygame.image.load("PNG/Players/bunny1_walk2_r.png").convert()
-            self.bunny_walk1_l = pygame.image.load("PNG/Players/bunny1_walk1_l.png").convert()
-            self.bunny_walk2_l = pygame.image.load("PNG/Players/bunny1_walk2_l.png").convert()
-
-            ## Set texture background to transparent
-            self.bunny_stand.set_colorkey(color.BLACK)
-            self.bunny_walk1_r.set_colorkey(color.BLACK)
-            self.bunny_walk2_r.set_colorkey(color.BLACK)
-            self.bunny_walk1_l.set_colorkey(color.BLACK)
-            self.bunny_walk2_l.set_colorkey(color.BLACK)
-
-            ## Set texture
-            self.image = self.bunny_stand
-
-        elif skin == "femal" :
-            ## Import textures
-            self.bunny_stand = pygame.image.load("PNG/Players/bunny2_stand.png").convert()
-            self.bunny_walk1_r = pygame.image.load("PNG/Players/bunny2_walk1_r.png").convert()
-            self.bunny_walk2_r = pygame.image.load("PNG/Players/bunny2_walk2_r.png").convert()
-            self.bunny_walk1_l = pygame.image.load("PNG/Players/bunny2_walk1_l.png").convert()
-            self.bunny_walk2_l = pygame.image.load("PNG/Players/bunny2_walk2_l.png").convert()
-
-            ## Set texture background to transparent
-            self.bunny_stand.set_colorkey(color.BLACK)
-            self.bunny_walk1_r.set_colorkey(color.BLACK)
-            self.bunny_walk2_r.set_colorkey(color.BLACK)
-            self.bunny_walk1_l.set_colorkey(color.BLACK)
-            self.bunny_walk2_l.set_colorkey(color.BLACK)
-
-            ## Set texture
-            self.image = self.bunny_stand
-        
-        ## Get sprite position
-        self.rect = self.image.get_rect()
-
-        ## Get sprite width and height
-        self.width = self.image.get_width()
-        self.height = self.image.get_height()
-        #self.height_diff = 0
-        ## Set diferents variables
-        self.jump = 0
-        self.speed_base = 5
-        self.speed = 0
-        self.run_time = 0
-        ## Set player default position
-        self.rect.y = var.height - 32 - 94 - self.height
-        self.rect.x = 32
-
-    def update(self, run) :
-        ## Import diferents classes
-    
-        ## Player animation
-        if run == "right" :
-            ## Each images alternate every 20 frames
-            if self.run_time < 20: 
-                self.image = self.bunny_walk1_r
-                self.run_time += 1
-            elif self.run_time < 40 :
-                self.run_time += 1
-                self.image = self.bunny_walk2_r
-            else :
-                self.run_time = 0
-        elif run == "stand" :
-            self.image = self.bunny_stand
-            self.run_time = 0
-        elif run == "left" :
-            ## Each images alternate every 20 frames
-            if self.run_time < 20: 
-                self.image = self.bunny_walk1_l
-                self.run_time += 1
-            elif self.run_time < 40 :
-                self.run_time += 1
-                self.image = self.bunny_walk2_l
-            else :
-                self.run_time = 0
-        
-        self.image.set_colorkey(color.BLACK)
-        #self.height_diff = (self.image.get_height() - self.height)
-        #self.width_diff = (self.image.get_width() - self.width)
-        #self.rect.y -= self.height_diff
-        #self.rect.x -= self.height_diff
-        #self.width = self.image.get_width()
-        #self.height = self.image.get_height()
-
-class Ground(pygame.sprite.Sprite):
-    
-    def __init__(self):
-        ## Call the parent class (Sprite) constructor
-        super().__init__()
-        ## Import diferents classes
-        var = Var()
-
-        ## Import picture
-        self.image = pygame.image.load("PNG/Environment/ground_grass.png").convert()
-        ## Set the background to transparent
-        self.image.set_colorkey(color.BLACK)
-
-        ## Get sprite position
-        self.rect = self.image.get_rect()
-        ## Get sprite width and height
-        self.width = self.image.get_width()
-        self.height = self.image.get_height()
-        self.rect.y = var.height - 16 - 94
-        self.rect.x = 32
-
-class Buton(pygame.sprite.Sprite):
-
-    def __init__(self, text, color_txt):
-        ## Call the parent class (Sprite) constructor
-        super().__init__()
-        ## Import diferents classes
-        var = Var()
-
-        ## Import picrure
-        self.image_1 = pygame.image.load("PNG/Environment/ground_grass.png").convert()
-
-        self.image = pygame.Surface([self.image_1.get_width(),self.image_1.get_height()])
-
-        ## Set the background to transparent
-        self.image.set_colorkey(color.BLACK)
-
-        ## Get sprite position
-        self.rect = self.image.get_rect()
-        
-        ## Get sprite width and height
-        self.width = self.image.get_width()
-        self.height = self.image.get_height()
-        self.rect.x = (var.width/2 - self.width/2)
-        self.rect.y = 32
-
-        ## Set text content
-        self.text = text
-        ## Set text color
-        self.color = color_txt
-        ## Set font and font size
-        self.font = pygame.font.SysFont("Ubuntu", 25)
-        ## Creat text object
-        self.textSurf = self.font.render(self.text, 1, self.color)
-        ## Get the text object width and height
-        self.text_width = self.textSurf.get_width()
-        self.text_height = self.textSurf.get_height()
-        ## Fuse text object with the buton
-        self.image.blit(self.image_1,[0,0])
-        self.image.blit(self.textSurf, [(self.width/2 - self.text_width/2), (self.height/2 - self.text_height/2)])
-    def update(self, text, color_txt):
-        ## Import diferents classes
-        var = Var()
-
-        ## Update text
-        self.text = text
-        ## Update text color
-        self.color = color_txt
-        ## Set font and font size
-        self.font = pygame.font.SysFont("Ubuntu", 25)
-        ## Creat text object
-        self.textSurf = self.font.render(self.text, 1, self.color)
-        ## Get the text object width and height
-        self.text_width = self.textSurf.get_width()
-        self.text_height = self.textSurf.get_height()
-        ## Fuse text object with the buton
-        self.image.blit(self.image_1, [0,0])
-        self.image.blit(self.textSurf, [(self.width/2 - self.text_width/2), (self.height/2 - self.text_height/2)])
-
-class Pointer(pygame.sprite.Sprite):
-
-    def __init__(self):
-        super().__init__()
-        ## Import diferents classes
-        var = Var()
-
-        ## Create a surface of 1x1 px
-        self.image = pygame.Surface((1, 1))
-        ## Set color to white
-        self.image.fill(color.WHITE)
-        ## Get sprite position
-        self.rect = self.image.get_rect()
-        ## Set default sprite position
-        self.rect.x = 1
-        self.rect.y = 1
-        self.mask = pygame.mask.from_surface(self.image)
-
-class Background() :
-    def __init__(self) :
-        ## Import diferents classes
-        var = Var()
-
-        ## Import background pictures (don't convert picture to pygame format to keep transarence)
-        self.bg1_base = pygame.image.load("PNG/Background/bg_layer1.png")
-        self.bg2_base = pygame.image.load("PNG/Background/bg_layer2.png")
-        self.bg3_base = pygame.image.load("PNG/Background/bg_layer3.png")
-        self.bg4_base = pygame.image.load("PNG/Background/bg_layer4.png")
-
-        ## Creat background surface
-        self.bg = pygame.Surface([var.width, var.height])
-
-        ## Resize background pictures
-        self.bg1 = pygame.transform.scale(self.bg1_base, (var.width, var.height))
-        self.bg2 = pygame.transform.scale(self.bg2_base, (var.width, var.height))
-        self.bg3 = pygame.transform.scale(self.bg3_base, (var.width, var.height))
-        self.bg4 = pygame.transform.scale(self.bg4_base, (var.width, var.height))
-        
-        ## Fuse background onto background surface
-        self.bg.blit(self.bg1, [0, 0])
-        self.bg.blit(self.bg2, [0, 0])
-        self.bg.blit(self.bg3, [0, 0])
-        self.bg.blit(self.bg4, [0, 0])
-
-    def update(self, screen) :
-        ## Print background on screen
-        screen.blit(self.bg, [0, 0])
+import color
+from player import *
+from ground import *
+from config import *
+from buton import *
+from pointer import *
+from background import *
 
 class Game :
     def menu():
         ## Init pygame
         pygame.init()
-        ## Import diferents classes
-        var = Var()
         ## Init screen
-        screen = pygame.display.set_mode([var.width, var.height])
+        screen = pygame.display.set_mode([Config.width, Config.height])
         ## Init windows title
         pygame.display.set_caption("JUMPER !!!")
         ## Init clock
@@ -268,14 +32,14 @@ class Game :
         ## Add pointer to menu sprite's group
         all_menu_sprites_list.add(pointer)
         ## Create butons
-        buton1 = Buton("Play", color.WHITE)
-        buton2 = Buton("Options", color.WHITE)
+        buton1 = Buton("Play", Color.WHITE)
+        buton2 = Buton("Options", Color.WHITE)
         ## Set buton1 pos
-        buton1.rect.x = (var.width/2 - buton1.width/2)
-        buton1.rect.y = (var.height/2 - buton1.height/2 - 100)
+        buton1.rect.x = (Config.width/2 - buton1.width/2)
+        buton1.rect.y = (Config.height/2 - buton1.height/2 - 100)
         ## Set buton2 pos
-        buton2.rect.x = (var.width/2 - buton2.width/2)
-        buton2.rect.y = (var.height/2 - buton2.height/2 + 100)
+        buton2.rect.x = (Config.width/2 - buton2.width/2)
+        buton2.rect.y = (Config.height/2 - buton2.height/2 + 100)
         ## Add butons to buton list
         buton_list.add(buton1)
         buton_list.add(buton2)
@@ -306,7 +70,7 @@ class Game :
                                 Game.game()
                             elif buton.text is "Options" :
                                 buton.text = "This is currently not implemented"
-                                buton.update("This is currently not implemented", color.WHITE)
+                                buton.update("This is currently not implemented", Color.WHITE)
 
                             all_menu_sprites_list.add(buton)
                             buton_list.add(buton)
@@ -325,9 +89,9 @@ class Game :
             if buton_pointer_list != [] :
                 ## For each buton who are in colision with pointer
                 for buton in buton_pointer_list :
-                    ## Update text color to red
-                    if buton.color != color.RED :
-                        buton.update(buton.text , color.RED)
+                    ## Update text Color to red
+                    if buton.color != Color.RED :
+                        buton.update(buton.text , Color.RED)
                     ## Re-add buton to sprite list
                     buton_list.add(buton)
                     all_menu_sprites_list.add(buton)
@@ -335,9 +99,9 @@ class Game :
             else :
                 ## For all butons 
                 for buton in buton_list :
-                    ## Update text color to white
-                    if buton.color != color.WHITE :
-                        buton.update(buton.text, color.WHITE)
+                    ## Update text Color to white
+                    if buton.color != Color.WHITE :
+                        buton.update(buton.text, Color.WHITE)
             
             ########## CLEAR SCREEN ZONE ##########
         
@@ -363,10 +127,8 @@ class Game :
         C_base = -109
         C = C_base
         GROUND = 0
-        ## Import diferents classes
-        var = Var()
         ## Init screen        
-        screen = pygame.display.set_mode([var.width, var.height])
+        screen = pygame.display.set_mode([Config.width, Config.height])
         ## Init clock
         clock = pygame.time.Clock()
         ## Set background
@@ -447,13 +209,13 @@ class Game :
             ########## LOGIC CODE ZONE ##########
             
             ## Quit game if player is out of screen
-            if player.rect.y > var.height :
+            if player.rect.y > Config.height :
                 done_game = True
             
-            if (player.rect.x + player.width) > (var.width - var.width/3) :
+            if (player.rect.x + player.width) > (Config.width - Config.width/3) :
                 for test in movable_list :
                     test.rect.x -= 5
-            if player.rect.x < (var.width/16) :
+            if player.rect.x < (Config.width/16) :
                 for test in movable_list :
                     test.rect.x += 5
 
@@ -531,7 +293,7 @@ class Game :
             ########## CLEAR SCREEN ZONE ##########
         
             ## Set the entier screnn to white
-            #screen.fill(color.BLACK)
+            #screen.fill(Color.BLACK)
             background.update(screen)
         
             ########## DRAWING CODE ZONE ##########
